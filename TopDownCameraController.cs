@@ -4,23 +4,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TopDownCameraController : MonoBehaviour {
-    [Range(0.0f, 20.0f)] public float leftRightMovementSensitivity;
-    [Range(0.0f, 20.0f)] public float upDownMovementSensitivity;
-    [Range(0.0f, 20.0f)] public float forwardBackMovementSensitivity;
-    [Range(0.0f, 150.0f)] public float horizontalRotationSensitivity;
-    [Range(0.0f, 250.0f)] public float verticalRotationSensitivity;
-    [Range(VIEW_ANGLE_MIN, VIEW_ANGLE_MAX)] public float viewAngle;
+    [Range(0.0f, 20.0f)] public float leftRightMovementSensitivity = 15.0f;
+    [Range(0.0f, 20.0f)] public float upDownMovementSensitivity = 15.0f;
+    [Range(0.0f, 20.0f)] public float forwardBackMovementSensitivity = 15.0f;
+    [Range(0.0f, 150.0f)] public float horizontalRotationSensitivity = 80.0f;
+    [Range(0.0f, 500.0f)] public float verticalRotationSensitivity = 250.0f;
+    [Range(VIEW_ANGLE_MIN, VIEW_ANGLE_MAX)] public float viewAngle = 15.0f;
+    public bool verticalRotationInverted = false;
     private const float VIEW_ANGLE_MIN = 0.0f;
     private const float VIEW_ANGLE_MAX = 75.0f;
     
     private Transform mainTransform;
     private Transform cameraTransform;
-    private new Camera camera;
 
     private void Start() {
         mainTransform = transform;
         cameraTransform = transform.GetChild(0);
-        camera = cameraTransform.GetComponent<Camera>();
     }
 
     private void OnValidate() {
@@ -28,10 +27,10 @@ public class TopDownCameraController : MonoBehaviour {
     }
 
     private void UpdateViewAngle() {
-        camera.transform.eulerAngles = new Vector3(
+        cameraTransform.eulerAngles = new Vector3(
             viewAngle, 
-            camera.transform.eulerAngles.y, 
-            camera.transform.eulerAngles.z
+            cameraTransform.eulerAngles.y, 
+            cameraTransform.eulerAngles.z
         );
     }
 
@@ -45,7 +44,12 @@ public class TopDownCameraController : MonoBehaviour {
         // Snap: True
         // Type: Key or Mouse Button
         
-        viewAngle += Input.GetAxis("Mouse ScrollWheel") * verticalRotationSensitivity * Time.deltaTime;
+        if (verticalRotationInverted) {
+            viewAngle -= Input.GetAxis("Mouse ScrollWheel") * verticalRotationSensitivity * Time.deltaTime;
+        } else {
+            viewAngle += Input.GetAxis("Mouse ScrollWheel") * verticalRotationSensitivity * Time.deltaTime;
+        }
+        
         viewAngle = Mathf.Clamp(viewAngle, VIEW_ANGLE_MIN, VIEW_ANGLE_MAX);
         UpdateViewAngle();
 
