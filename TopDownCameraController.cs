@@ -9,10 +9,10 @@ public class TopDownCameraController : MonoBehaviour {
     [Range(0.0f, 20.0f)] public float forwardBackMovementSensitivity = 15.0f;
     [Range(0.0f, 150.0f)] public float horizontalRotationSensitivity = 80.0f;
     [Range(0.0f, 500.0f)] public float verticalRotationSensitivity = 250.0f;
-    [Range(VIEW_ANGLE_MIN, VIEW_ANGLE_MAX)] public float viewAngle = 15.0f;
+    [Range(ViewAngleMin, ViewAngleMax)] public float viewAngle = 15.0f;
     public bool verticalRotationInverted = false;
-    private const float VIEW_ANGLE_MIN = 0.0f;
-    private const float VIEW_ANGLE_MAX = 75.0f;
+    private const float ViewAngleMin = 0.0f;
+    private const float ViewAngleMax = 75.0f;
     
     private Transform mainTransform;
     private Transform cameraTransform;
@@ -50,7 +50,7 @@ public class TopDownCameraController : MonoBehaviour {
             viewAngle += Input.GetAxis("Mouse ScrollWheel") * verticalRotationSensitivity * Time.deltaTime;
         }
         
-        viewAngle = Mathf.Clamp(viewAngle, VIEW_ANGLE_MIN, VIEW_ANGLE_MAX);
+        viewAngle = Mathf.Clamp(viewAngle, ViewAngleMin, ViewAngleMax);
         UpdateViewAngle();
 
         Vector3 translation = new Vector3 (
